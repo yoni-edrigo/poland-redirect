@@ -1,434 +1,1069 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="he" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>קבוצות WhatsApp - פולין</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>טופס הרשמה - מסע פולין</title>
+    <link
+      rel="preload"
+      as="video"
+      href="https://cdn.jsdelivr.net/gh/yoni-edrigo/poland-redirect@7febfd7edc72cb7c55c3e65b68a5275e77e90d58/poland-bg.mp4"
+      type="video/mp4"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/zod@3.22.4/lib/index.umd.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
 
-        /* Video Background */
-        .video-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-            background: #000;
-        }
+      /* Video Background */
+      .video-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+        background: #000;
+      }
 
-        .video-background::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: 2;
-        }
+      .video-background::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 2;
+      }
 
-        /* Main video - stretch to cover entire screen */
-        #bg-video {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            object-fit: cover;
-            z-index: 1;
-        }
+      /* Main video - stretch to cover entire screen */
+      #bg-video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: cover;
+        z-index: 1;
+      }
 
-        /* Container */
-        .container {
-            position: relative;
-            z-index: 1;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 30px 20px;
-        }
+      /* Container */
+      .container {
+        position: relative;
+        z-index: 1;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 30px 20px;
+      }
 
-        /* Logo Section */
+      /* Logo Section */
+      .logos {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 1400px;
+        padding: 0 20px;
+      }
+
+      .logo {
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.8rem;
+        transition: transform 0.3s ease;
+        overflow: hidden;
+      }
+
+      .logo:hover {
+        transform: scale(1.05);
+      }
+
+      .logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .logo-svg {
+        filter: brightness(0) invert(1);
+      }
+
+      /* Main Content - Centered */
+      .main-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        width: 100%;
+        max-width: 600px;
+        text-align: center;
+      }
+
+      /* Countdown Section */
+      .countdown-section {
+        margin-bottom: 60px;
+        color: white;
+      }
+
+      .countdown-section h1 {
+        font-size: 56px;
+        font-weight: 300;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        letter-spacing: 2px;
+      }
+
+      .countdown-section .date {
+        font-size: 28px;
+        font-weight: 300;
+        margin-bottom: 40px;
+        opacity: 0.95;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+      }
+
+      .countdown {
+        display: flex;
+        gap: 25px;
+        justify-content: center;
+        flex-wrap: nowrap;
+      }
+
+      .countdown-item {
+        text-align: center;
+        min-width: 80px;
+        flex-shrink: 1;
+      }
+
+      .countdown-value {
+        display: block;
+        font-size: 64px;
+        font-weight: 300;
+        line-height: 1;
+        margin-bottom: 8px;
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+      }
+
+      .countdown-label {
+        display: block;
+        font-size: 15px;
+        font-weight: 400;
+        opacity: 0.9;
+        text-transform: lowercase;
+        letter-spacing: 1px;
+      }
+
+      /* Form Section */
+      .form-section {
+        background: rgba(255, 255, 255, 0.95);
+        padding: 40px;
+        border-radius: 16px;
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+      }
+
+      .form-group {
+        margin-bottom: 24px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-size: 16px;
+        font-weight: 500;
+      }
+
+      .form-group input[type="text"],
+      .form-group input[type="number"],
+      .form-group select {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: white;
+        cursor: pointer;
+      }
+
+      .form-group select {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: left 12px center;
+        background-size: 20px;
+        padding-left: 40px;
+      }
+
+      .form-group input[type="text"]:focus,
+      .form-group input[type="number"]:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #4285f4;
+        box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+      }
+
+      .form-group input.error,
+      .form-group select.error {
+        border-color: #dc3545;
+      }
+
+      .error-message {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 6px;
+        display: block;
+      }
+
+      .checkbox-group {
+        margin-bottom: 20px;
+      }
+
+      .checkbox-wrapper {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        cursor: pointer;
+      }
+
+      .checkbox-wrapper input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        margin-top: 2px;
+        flex-shrink: 0;
+      }
+
+      .checkbox-wrapper label {
+        flex: 1;
+        color: #333;
+        font-size: 15px;
+        line-height: 1.5;
+        cursor: pointer;
+        margin: 0;
+      }
+
+      .checkbox-wrapper.error label {
+        color: #dc3545;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 16px;
+        background: #4285f4;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 8px;
+      }
+
+      .submit-btn:hover:not(:disabled) {
+        background: #357ae8;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
+      }
+
+      .submit-btn:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+      }
+
+      .success-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
+        border: 1px solid #c3e6cb;
+      }
+
+      .error-submit-message {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: center;
+        border: 1px solid #f5c6cb;
+      }
+
+      /* Footer spacer */
+      .footer-spacer {
+        height: 30px;
+      }
+
+      @media (max-width: 768px) {
         .logos {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 1400px;
-            padding: 0 20px;
+          padding: 0 10px;
         }
 
         .logo {
-            width: 100px;
-            height: 100px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.8rem;
-            transition: transform 0.3s ease;
-            overflow: hidden;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
-        }
-
-        .logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .logo-svg {
-            filter: brightness(0) invert(1);
-        }
-
-        /* Main Content - Centered */
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex: 1;
-            width: 100%;
-            max-width: 600px;
-            text-align: center;
-        }
-
-        /* Countdown Section */
-        .countdown-section {
-            margin-bottom: 60px;
-            color: white;
+          width: 75px;
+          height: 75px;
+          padding: 0.6rem;
         }
 
         .countdown-section h1 {
-            font-size: 56px;
-            font-weight: 300;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-            letter-spacing: 2px;
+          font-size: 40px;
         }
 
         .countdown-section .date {
-            font-size: 28px;
-            font-weight: 300;
-            margin-bottom: 40px;
-            opacity: 0.95;
-            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+          font-size: 22px;
+          margin-bottom: 30px;
         }
 
         .countdown {
-            display: flex;
-            gap: 25px;
-            justify-content: center;
-            flex-wrap: nowrap;
+          gap: 15px;
         }
 
         .countdown-item {
-            text-align: center;
-            min-width: 80px;
-            flex-shrink: 1;
+          min-width: 60px;
         }
 
         .countdown-value {
-            display: block;
-            font-size: 64px;
-            font-weight: 300;
-            line-height: 1;
-            margin-bottom: 8px;
-            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+          font-size: 42px;
         }
 
         .countdown-label {
-            display: block;
-            font-size: 15px;
-            font-weight: 400;
-            opacity: 0.9;
-            text-transform: lowercase;
-            letter-spacing: 1px;
+          font-size: 12px;
         }
 
-        /* Links Section */
-        .links-section {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            width: 100%;
+        .form-section {
+          padding: 24px 20px;
+          max-width: 95%;
         }
 
-        .whatsapp-link {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 22px 40px;
-            border-radius: 12px;
-            text-decoration: none;
-            color: #333;
-            font-size: 20px;
-            font-weight: 500;
-            text-align: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            backdrop-filter: blur(10px);
+        .form-group {
+          margin-bottom: 18px;
         }
 
-        .whatsapp-link:hover {
-            background: rgba(255, 255, 255, 1);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        .form-group label {
+          font-size: 15px;
+          margin-bottom: 6px;
         }
 
-        .whatsapp-icon {
-            width: 30px;
-            height: 30px;
-            fill: #25D366;
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+          font-size: 15px;
+          padding: 10px 14px;
         }
 
-        /* Footer spacer */
-        .footer-spacer {
-            height: 30px;
+        .form-group select {
+          padding-left: 35px;
         }
 
-        @media (max-width: 768px) {
-            .logos {
-                padding: 0 10px;
-            }
-
-            .logo {
-                width: 75px;
-                height: 75px;
-                padding: 0.6rem;
-            }
-
-            .countdown-section h1 {
-                font-size: 40px;
-            }
-
-            .countdown-section .date {
-                font-size: 22px;
-                margin-bottom: 30px;
-            }
-
-            .countdown {
-                gap: 15px;
-            }
-
-            .countdown-item {
-                min-width: 60px;
-            }
-
-            .countdown-value {
-                font-size: 42px;
-            }
-
-            .countdown-label {
-                font-size: 12px;
-            }
-
-            .whatsapp-link {
-                font-size: 17px;
-                padding: 18px 30px;
-            }
-
-            .whatsapp-icon {
-                width: 26px;
-                height: 26px;
-            }
+        .checkbox-group {
+          margin-bottom: 16px;
         }
 
-        @media (max-width: 480px) {
-            .logo {
-                width: 65px;
-                height: 65px;
-                padding: 0.5rem;
-                border-radius: 15px;
-            }
-
-            .countdown-section h1 {
-                font-size: 32px;
-            }
-
-            .countdown-section .date {
-                font-size: 18px;
-                margin-bottom: 25px;
-            }
-
-            .countdown {
-                gap: 10px;
-            }
-
-            .countdown-item {
-                min-width: 50px;
-            }
-
-            .countdown-value {
-                font-size: 34px;
-            }
-
-            .countdown-label {
-                font-size: 11px;
-            }
-
-            .whatsapp-link {
-                font-size: 16px;
-                padding: 16px 24px;
-            }
-
-            .links-section {
-                gap: 15px;
-            }
+        .checkbox-wrapper label {
+          font-size: 14px;
         }
 
-        @media (max-width: 380px) {
-            .countdown {
-                gap: 8px;
-            }
-
-            .countdown-item {
-                min-width: 45px;
-            }
-
-            .countdown-value {
-                font-size: 28px;
-            }
-
-            .countdown-label {
-                font-size: 10px;
-            }
+        .submit-btn {
+          padding: 14px;
+          font-size: 16px;
         }
+
+        .success-message,
+        .error-submit-message {
+          padding: 14px;
+          font-size: 14px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 20px 15px;
+        }
+
+        .logo {
+          width: 60px;
+          height: 60px;
+          padding: 0.4rem;
+          border-radius: 15px;
+        }
+
+        .countdown-section h1 {
+          font-size: 32px;
+        }
+
+        .countdown-section .date {
+          font-size: 18px;
+          margin-bottom: 25px;
+        }
+
+        .countdown {
+          gap: 10px;
+        }
+
+        .countdown-item {
+          min-width: 50px;
+        }
+
+        .countdown-value {
+          font-size: 34px;
+        }
+
+        .countdown-label {
+          font-size: 11px;
+        }
+
+        .form-section {
+          padding: 20px 16px;
+          max-width: 100%;
+        }
+
+        .form-group {
+          margin-bottom: 16px;
+        }
+
+        .form-group label {
+          font-size: 14px;
+          margin-bottom: 5px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+          font-size: 14px;
+          padding: 10px 12px;
+        }
+
+        .form-group select {
+          padding-left: 32px;
+          background-size: 18px;
+        }
+
+        .checkbox-wrapper {
+          gap: 10px;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+          width: 18px;
+          height: 18px;
+        }
+
+        .checkbox-wrapper label {
+          font-size: 13px;
+        }
+
+        .checkbox-group {
+          margin-bottom: 14px;
+        }
+
+        .submit-btn {
+          padding: 13px;
+          font-size: 15px;
+        }
+
+        .success-message,
+        .error-submit-message {
+          padding: 12px;
+          font-size: 13px;
+          margin-bottom: 16px;
+        }
+
+        .error-message {
+          font-size: 12px;
+          margin-top: 4px;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .countdown {
+          gap: 8px;
+        }
+
+        .countdown-item {
+          min-width: 45px;
+        }
+
+        .countdown-value {
+          font-size: 28px;
+        }
+
+        .countdown-label {
+          font-size: 10px;
+        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Video Background -->
     <div class="video-background">
-        <video id="bg-video" autoplay muted loop playsinline>
-            <source src="https://cdn.jsdelivr.net/gh/yoni-edrigo/poland-redirect@7febfd7edc72cb7c55c3e65b68a5275e77e90d58/poland-bg.mp4" type="video/mp4">
-        </video>
+      <video id="bg-video" autoplay muted loop playsinline>
+        <source
+          src="https://cdn.jsdelivr.net/gh/yoni-edrigo/poland-redirect@7febfd7edc72cb7c55c3e65b68a5275e77e90d58/poland-bg.mp4"
+          type="video/mp4"
+        />
+      </video>
     </div>
 
     <!-- Main Content -->
     <div class="container">
-        <!-- Logo Section -->
-        <div class="logos">
-            <div class="logo">
-                <img src="https://cdn.jsdelivr.net/gh/yoni-edrigo/zoom-hanhaga@3e413a87a4b239edb1ad21ceb3e9c763c3a0fde7/logo%20bw%20mashazim.svg" alt="Mashazim Logo" class="logo-svg">
-            </div>
-            <div class="logo">
-                <img src="https://static.wixstatic.com/media/d9444e_d7a7c99753b0415c9e72247f7b68b1e1~mv2.gif" alt="Logo">
-            </div>
+      <!-- Logo Section -->
+      <div class="logos">
+        <div class="logo">
+          <img
+            src="https://cdn.jsdelivr.net/gh/yoni-edrigo/zoom-hanhaga@3e413a87a4b239edb1ad21ceb3e9c763c3a0fde7/logo%20bw%20mashazim.svg"
+            alt="Mashazim Logo"
+            class="logo-svg"
+          />
         </div>
-
-        <!-- Main Content - Centered -->
-        <div class="main-content">
-            <!-- Countdown Section -->
-            <div class="countdown-section">
-                <h1>כנס חשיפה ומידע</h1>
-                <div class="date">04.01.2026</div>
-                <div class="countdown" id="countdown">
-                    <div class="countdown-item">
-                        <span class="countdown-value" id="days">0</span>
-                        <span class="countdown-label">ימים</span>
-                    </div>
-                    <div class="countdown-item">
-                        <span class="countdown-value" id="hours">0</span>
-                        <span class="countdown-label">שעות</span>
-                    </div>
-                    <div class="countdown-item">
-                        <span class="countdown-value" id="minutes">0</span>
-                        <span class="countdown-label">דקות</span>
-                    </div>
-                    <div class="countdown-item">
-                        <span class="countdown-value" id="seconds">0</span>
-                        <span class="countdown-label">שניות</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- WhatsApp Links -->
-            <div class="links-section">
-                <a href="https://chat.whatsapp.com/LjUyHyqyNHsHsv6VmVh11B" class="whatsapp-link" target="_blank">
-                    <svg class="whatsapp-icon" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                    </svg>
-                    מידע והודעות פולין שכבה יא
-                </a>
-
-                <a href="https://chat.whatsapp.com/Bx4gZoHtIvDCGVbZEbbgPo" class="whatsapp-link" target="_blank">
-                    <svg class="whatsapp-icon" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                    </svg>
-                    מידע והודעות פולין שכבה יב
-                </a>
-            </div>
+        <div class="logo">
+          <img
+            src="https://static.wixstatic.com/media/d9444e_d7a7c99753b0415c9e72247f7b68b1e1~mv2.gif"
+            alt="Logo"
+          />
         </div>
+      </div>
+      <!-- Main Content - Centered -->
+      <div class="main-content">
+        <!-- Registration Form -->
+        <div class="form-section">
+          <div
+            id="success-message"
+            class="success-message"
+            style="display: none"
+          >
+            הטופס נשלח בהצלחה! תודה על ההרשמה.
+          </div>
 
-        <!-- Footer spacer -->
-        <div class="footer-spacer"></div>
+          <div
+            id="error-message"
+            class="error-submit-message"
+            style="display: none"
+          >
+            אירעה שגיאה בשליחת הטופס. אנא נסה שוב.
+          </div>
+
+          <form id="registration-form">
+            <div class="form-group">
+              <label for="name">שם</label>
+              <input type="text" id="name" name="name" />
+              <span class="error-message" id="name-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="id-number">ת.ז.</label>
+              <input type="text" id="id-number" name="idNumber" />
+              <span class="error-message" id="id-number-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="school">בית ספר</label>
+              <select id="school" name="school">
+                <option value="">בחר בית ספר</option>
+                <option value="אהבת חיים">אהבת חיים</option>
+                <option value="אהבת ישראל בנות">אהבת ישראל בנות</option>
+                <option value="אולפנת אורות מודיעין">
+                  אולפנת אורות מודיעין
+                </option>
+                <option value="אולפנת אורי">אולפנת אורי</option>
+                <option value="אולפנת גילה">אולפנת גילה</option>
+                <option value="אולפנת דולב">אולפנת דולב</option>
+                <option value="אולפנת לבונה">אולפנת לבונה</option>
+                <option value="אולפנת נגה">אולפנת נגה</option>
+                <option value="אולפנת עפרה">אולפנת עפרה</option>
+                <option value="אולפנת פסגת זאב">אולפנת פסגת זאב</option>
+                <option value="אולפנת צביה כוכב יעקב">
+                  אולפנת צביה כוכב יעקב
+                </option>
+                <option value="אולפנת קרית ארבע">אולפנת קרית ארבע</option>
+                <option value="אומנויות">אומנויות</option>
+                <option value="אור צור הדסה">אור צור הדסה</option>
+                <option value="אור תורה בנות">אור תורה בנות</option>
+                <option value="אור תורה בנים">אור תורה בנים</option>
+                <option value="אורות יהודה">אורות יהודה</option>
+                <option value="אורט בית הערבה">אורט בית הערבה</option>
+                <option value="אורט מינקוף">אורט מינקוף</option>
+                <option value="אורט רמות">אורט רמות</option>
+                <option value="אורט תעופה וחלל">אורט תעופה וחלל</option>
+                <option value="אילנות">אילנות</option>
+                <option value="אלומות">אלומות</option>
+                <option value="אלונים">אלונים</option>
+                <option value="אמירים">אמירים</option>
+                <option value="אמית איתן מעלה אדומים">
+                  אמית איתן מעלה אדומים
+                </option>
+                <option value="אמית בנות מודיעין">אמית בנות מודיעין</option>
+                <option value="אמית בנים מודיעין">אמית בנים מודיעין</option>
+                <option value="אמית דביר">אמית דביר</option>
+                <option value="אמית שילה">אמית שילה</option>
+                <option value="ארזים">ארזים</option>
+                <option value="בויאר">בויאר</option>
+                <option value="בית הציר">בית הציר</option>
+                <option value="בית חינוך עיוורים">בית חינוך עיוורים</option>
+                <option value="בית חינוך עירוני ג'">בית חינוך עירוני ג'</option>
+                <option value="בית חירשים">בית חירשים</option>
+                <option value="בית יעקב גור">בית יעקב גור</option>
+                <option value="בית רחל שטראוס">בית רחל שטראוס</option>
+                <option value="בן יהודה">בן יהודה</option>
+                <option value="בני חייל">בני חייל</option>
+                <option value="ברושים">ברושים</option>
+                <option value="ברנקו וייס">ברנקו וייס</option>
+                <option value="גבעת גונן">גבעת גונן</option>
+                <option value="גוונים">גוונים</option>
+                <option value="גורן">גורן</option>
+                <option value="גימנסיה">גימנסיה</option>
+                <option value="דקל וילנאי">דקל וילנאי</option>
+                <option value="דרור">דרור</option>
+                <option value="דרך אבות">דרך אבות</option>
+                <option value="הדרך הר חומה">הדרך הר חומה</option>
+                <option value="היובל מבשרת ציון">היובל מבשרת ציון</option>
+                <option value="הימלפרב">הימלפרב</option>
+                <option value="הרטוב">הרטוב</option>
+                <option value="הרטמן בנות">הרטמן בנות</option>
+                <option value="הרטמן בנים">הרטמן בנים</option>
+                <option value="ויצו בית הכרם">ויצו בית הכרם</option>
+                <option value="זיו">זיו</option>
+                <option value="חוות הנוער הציוני">חוות הנוער הציוני</option>
+                <option value="חט''ב גבעת זאב">חט''ב גבעת זאב</option>
+                <option value="טדי קולק">טדי קולק</option>
+                <option value="טל רמות">טל רמות</option>
+                <option value="יובלים">יובלים</option>
+                <option value="יחד מודיעין">יחד מודיעין</option>
+                <option value="ירדן">ירדן</option>
+                <option value="ישיבה לצעירים">ישיבה לצעירים</option>
+                <option value="ישיבת בני עקיבא עלי">ישיבת בני עקיבא עלי</option>
+                <option value="ישיבת לפיד מודיעין">ישיבת לפיד מודיעין</option>
+                <option value="ישיבת מטה בנימין">ישיבת מטה בנימין</option>
+                <option value="ישיבת מעלה אדומים יתמ''א">
+                  ישיבת מעלה אדומים יתמ''א
+                </option>
+                <option value="ישיבת נעם">ישיבת נעם</option>
+                <option value="ישיבת פסגת זאב פג''ז">
+                  ישיבת פסגת זאב פג''ז
+                </option>
+                <option value="ישיבת קרית ארבע יתק''א">
+                  ישיבת קרית ארבע יתק''א
+                </option>
+                <option value="לבונה בית אריה">לבונה בית אריה</option>
+                <option value="ליד''ה">ליד''ה</option>
+                <option value="ליידי דייויס">ליידי דייויס</option>
+                <option value="מו''ר">מו''ר</option>
+                <option value="מכללת אורט">מכללת אורט</option>
+                <option value="מעגלים">מעגלים</option>
+                <option value="מקיף גילה ירושלים">מקיף גילה ירושלים</option>
+                <option value="נווה שמואל">נווה שמואל</option>
+                <option value="ניצנים">ניצנים</option>
+                <option value="נירים">נירים</option>
+                <option value="נעורים">נעורים</option>
+                <option value="נר תמיד">נר תמיד</option>
+                <option value="סליסברג">סליסברג</option>
+                <option value="סמינר בית יעקב">סמינר בית יעקב</option>
+                <option value="עין כרם">עין כרם</option>
+                <option value="עירוני א' מודיעין">עירוני א' מודיעין</option>
+                <option value="עירוני ב' מודיעין">עירוני ב' מודיעין</option>
+                <option value="עירוני ג' מודיעין">עירוני ג' מודיעין</option>
+                <option value="עירוני ד' מודיעין">עירוני ד' מודיעין</option>
+                <option value="עירוני ה' מודיעין">עירוני ה' מודיעין</option>
+                <option value="עלמא אמונה">עלמא אמונה</option>
+                <option value="עתיד שחר">עתיד שחר</option>
+                <option value="פלך בנות">פלך בנות</option>
+                <option value="פלך בנים">פלך בנים</option>
+                <option value="צביה יצירתית">צביה יצירתית</option>
+                <option value="קדמה">קדמה</option>
+                <option value="קרית יערים">קרית יערים</option>
+                <option value="קשת">קשת</option>
+                <option value="רנה קסין">רנה קסין</option>
+                <option value="רעות ירושלים">רעות ירושלים</option>
+                <option value="רעות- ממלכתי">רעות- ממלכתי</option>
+                <option value="שבילים">שבילים</option>
+                <option value="שלב">שלב</option>
+                <option value="שעלי תורה">שעלי תורה</option>
+                <option value="תבל">תבל</option>
+                <option value="תדהר">תדהר</option>
+                <option value="תיכון המסורתי">תיכון המסורתי</option>
+                <option value="תיכון כפר אדומים">תיכון כפר אדומים</option>
+                <option value="תפנית">תפנית</option>
+              </select>
+              <span class="error-message" id="school-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="core">גרעין</label>
+              <select id="core" name="core">
+                <option value="">בחר גרעין</option>
+                <option value="בית שמש">בית שמש</option>
+                <option value="בקעת ירדן">בקעת ירדן</option>
+                <option value="גוש עציון">גוש עציון</option>
+                <option value="ירושלים דתי">ירושלים דתי</option>
+                <option value="ירושלים ממלכתי">ירושלים ממלכתי</option>
+                <option value="מודיעין">מודיעין</option>
+                <option value="מעלה אדומים">מעלה אדומים</option>
+              </select>
+              <span class="error-message" id="core-error"></span>
+            </div>
+
+            <div class="checkbox-group">
+              <div class="checkbox-wrapper" id="checkbox1-wrapper">
+                <input
+                  type="checkbox"
+                  id="trip-commitment"
+                  name="tripCommitment"
+                />
+                <label for="trip-commitment"
+                  >בדקתי ואני מתחייב שאוכל לצאת למסע פולין ב10.08.26</label
+                >
+              </div>
+              <span class="error-message" id="trip-commitment-error"></span>
+            </div>
+
+            <div class="checkbox-group">
+              <div class="checkbox-wrapper" id="checkbox2-wrapper">
+                <input
+                  type="checkbox"
+                  id="payment-commitment"
+                  name="paymentCommitment"
+                />
+                <label for="payment-commitment"
+                  >בדקתי עם הוריי, ואני מתחייב לעמוד בתשלומי המסע כפי
+                  שהוצגו</label
+                >
+              </div>
+              <span class="error-message" id="payment-commitment-error"></span>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submit-btn">
+              שלח טופס
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Footer spacer -->
+      <div class="footer-spacer"></div>
     </div>
 
     <script>
-        // Set the date for the event - January 4, 2026
-        const eventDate = new Date('2026-01-04T00:00:00').getTime();
-
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = eventDate - now;
-
-            // Calculate time units
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            // Update the DOM
-            document.getElementById('days').textContent = days;
-            document.getElementById('hours').textContent = hours;
-            document.getElementById('minutes').textContent = minutes;
-            document.getElementById('seconds').textContent = seconds;
-
-            // If countdown is finished
-            if (distance < 0) {
-                clearInterval(countdownInterval);
-                document.getElementById('countdown').innerHTML = '<div class="countdown-item"><span class="countdown-value">האירוע התחיל!</span></div>';
-            }
-        }
-
-        // Update countdown every second
-        const countdownInterval = setInterval(updateCountdown, 1000);
-        
-        // Initial call
-        updateCountdown();
+      // Wait for Zod to load
+      window.addEventListener("DOMContentLoaded", function () {
+        // Access Zod from window
+        const z = window.Zod;
 
         // Set video playback speed to 55%
-        document.addEventListener('DOMContentLoaded', function() {
-            const videos = document.querySelectorAll('video');
-            videos.forEach(video => {
-                video.playbackRate = 0.55;
-            });
+        const videos = document.querySelectorAll("video");
+        videos.forEach((video) => {
+          video.playbackRate = 0.55;
         });
+
+        // Israeli ID validation function
+        function validateIsraeliID(id) {
+          // Remove any spaces or dashes
+          id = id.replace(/\s|-/g, "");
+
+          // Check if it's 9 digits
+          if (!/^\d{9}$/.test(id)) {
+            return false;
+          }
+
+          // Pad with leading zero if needed
+          id = id.padStart(9, "0");
+
+          // Calculate checksum using Luhn algorithm
+          let sum = 0;
+          for (let i = 0; i < 9; i++) {
+            let digit = parseInt(id[i]);
+            // Multiply every other digit by 2
+            let step = digit * ((i % 2) + 1);
+            // If result is greater than 9, sum the digits
+            sum += step > 9 ? step - 9 : step;
+          }
+
+          // Valid if sum is divisible by 10
+          return sum % 10 === 0;
+        }
+
+        // Form validation schema using Zod
+        const formSchema = z.object({
+          name: z.string().min(2, "שם חייב להכיל לפחות 2 תווים"),
+          idNumber: z
+            .string()
+            .regex(/^\d{9}$/, "תעודת זהות חייבת להכיל 9 ספרות")
+            .refine((val) => validateIsraeliID(val), {
+              message: "תעודת זהות לא תקינה",
+            }),
+          school: z.string().min(1, "יש לבחור בית ספר"),
+          core: z.string().min(1, "יש לבחור גרעין"),
+          tripCommitment: z.boolean().refine((val) => val === true, {
+            message: "יש לאשר את ההתחייבות",
+          }),
+          paymentCommitment: z.boolean().refine((val) => val === true, {
+            message: "יש לאשר את ההתחייבות",
+          }),
+        });
+
+        // Clear error message for a field
+        function clearError(fieldId) {
+          const input = document.getElementById(fieldId);
+          const errorElement = document.getElementById(`${fieldId}-error`);
+          if (input) input.classList.remove("error");
+          if (errorElement) errorElement.textContent = "";
+
+          // Clear checkbox wrapper error styling
+          const wrapper = document.getElementById(`checkbox1-wrapper`);
+          const wrapper2 = document.getElementById(`checkbox2-wrapper`);
+          if (fieldId === "trip-commitment" && wrapper) {
+            wrapper.classList.remove("error");
+          }
+          if (fieldId === "payment-commitment" && wrapper2) {
+            wrapper2.classList.remove("error");
+          }
+        }
+
+        // Display error message for a field
+        function showError(fieldId, message) {
+          const input = document.getElementById(fieldId);
+          const errorElement = document.getElementById(`${fieldId}-error`);
+          if (input) input.classList.add("error");
+          if (errorElement) errorElement.textContent = message;
+
+          // Add error styling to checkbox wrapper
+          const wrapper = document.getElementById(`checkbox1-wrapper`);
+          const wrapper2 = document.getElementById(`checkbox2-wrapper`);
+          if (fieldId === "trip-commitment" && wrapper) {
+            wrapper.classList.add("error");
+          }
+          if (fieldId === "payment-commitment" && wrapper2) {
+            wrapper2.classList.add("error");
+          }
+        }
+
+        // Handle form submission
+        document
+          .getElementById("registration-form")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            // Hide any previous messages
+            document.getElementById("success-message").style.display = "none";
+            document.getElementById("error-message").style.display = "none";
+
+            // Clear all previous errors
+            [
+              "name",
+              "id-number",
+              "school",
+              "core",
+              "trip-commitment",
+              "payment-commitment",
+            ].forEach(clearError);
+
+            // Get form data
+            const formData = {
+              name: document.getElementById("name").value.trim(),
+              idNumber: document.getElementById("id-number").value.trim(),
+              school: document.getElementById("school").value,
+              core: document.getElementById("core").value,
+              tripCommitment:
+                document.getElementById("trip-commitment").checked,
+              paymentCommitment:
+                document.getElementById("payment-commitment").checked,
+            };
+
+            // Validate form data
+            try {
+              formSchema.parse(formData);
+
+              // Disable submit button
+              const submitBtn = document.getElementById("submit-btn");
+              submitBtn.disabled = true;
+              submitBtn.textContent = "שולח...";
+
+              // Send data to webhook
+              const response = await fetch(
+                "https://hook.eu2.make.com/fqmwfcgi7ekfwny6u6bmpm26m7x6gyhj",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(formData),
+                },
+              );
+
+              if (response.ok) {
+                // Show success message
+                document.getElementById("success-message").style.display =
+                  "block";
+                // Reset form
+                document.getElementById("registration-form").reset();
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.textContent = "שלח טופס";
+
+                // Scroll to top to see message
+                document
+                  .querySelector(".form-section")
+                  .scrollIntoView({ behavior: "smooth", block: "start" });
+
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                  document.getElementById("success-message").style.display =
+                    "none";
+                }, 5000);
+              } else {
+                throw new Error("Failed to submit form");
+              }
+            } catch (error) {
+              if (error instanceof z.ZodError) {
+                // Display validation errors
+                error.errors.forEach((err) => {
+                  const fieldName = err.path[0];
+                  let fieldId = fieldName;
+
+                  // Convert camelCase to kebab-case for field IDs
+                  if (fieldName === "idNumber") fieldId = "id-number";
+                  if (fieldName === "tripCommitment")
+                    fieldId = "trip-commitment";
+                  if (fieldName === "paymentCommitment")
+                    fieldId = "payment-commitment";
+
+                  showError(fieldId, err.message);
+                });
+              } else {
+                // Show error message
+                document.getElementById("error-message").style.display =
+                  "block";
+                // Re-enable button
+                const submitBtn = document.getElementById("submit-btn");
+                submitBtn.disabled = false;
+                submitBtn.textContent = "שלח טופס";
+
+                // Scroll to top to see message
+                document
+                  .querySelector(".form-section")
+                  .scrollIntoView({ behavior: "smooth", block: "start" });
+
+                // Hide error message after 5 seconds
+                setTimeout(() => {
+                  document.getElementById("error-message").style.display =
+                    "none";
+                }, 5000);
+              }
+            }
+          });
+
+        // Add real-time validation on blur for text inputs
+        ["name", "id-number"].forEach((fieldId) => {
+          const input = document.getElementById(fieldId);
+          if (input) {
+            input.addEventListener("blur", function () {
+              const fieldName = fieldId === "id-number" ? "idNumber" : fieldId;
+              const value = this.value.trim();
+
+              try {
+                formSchema
+                  .pick({ [fieldName]: true })
+                  .parse({ [fieldName]: value });
+                clearError(fieldId);
+              } catch (error) {
+                if (error instanceof z.ZodError) {
+                  showError(fieldId, error.errors[0].message);
+                }
+              }
+            });
+
+            // Clear error on input
+            input.addEventListener("input", function () {
+              clearError(fieldId);
+            });
+          }
+        });
+
+        // Add real-time validation for school dropdown
+        const schoolSelect = document.getElementById("school");
+        if (schoolSelect) {
+          schoolSelect.addEventListener("change", function () {
+            const value = this.value;
+
+            try {
+              formSchema.pick({ school: true }).parse({ school: value });
+              clearError("school");
+            } catch (error) {
+              if (error instanceof z.ZodError) {
+                showError("school", error.errors[0].message);
+              }
+            }
+          });
+        }
+
+        // Add real-time validation for core dropdown
+        const coreSelect = document.getElementById("core");
+        if (coreSelect) {
+          coreSelect.addEventListener("change", function () {
+            const value = this.value;
+
+            try {
+              formSchema.pick({ core: true }).parse({ core: value });
+              clearError("core");
+            } catch (error) {
+              if (error instanceof z.ZodError) {
+                showError("core", error.errors[0].message);
+              }
+            }
+          });
+        }
+
+        // Real-time validation for checkboxes
+        ["trip-commitment", "payment-commitment"].forEach((fieldId) => {
+          const checkbox = document.getElementById(fieldId);
+          if (checkbox) {
+            checkbox.addEventListener("change", function () {
+              const fieldName =
+                fieldId === "trip-commitment"
+                  ? "tripCommitment"
+                  : "paymentCommitment";
+
+              try {
+                formSchema
+                  .pick({ [fieldName]: true })
+                  .parse({ [fieldName]: this.checked });
+                clearError(fieldId);
+              } catch (error) {
+                if (error instanceof z.ZodError) {
+                  showError(fieldId, error.errors[0].message);
+                }
+              }
+            });
+          }
+        });
+      }); // Close DOMContentLoaded
     </script>
-</body>
+  </body>
 </html>
